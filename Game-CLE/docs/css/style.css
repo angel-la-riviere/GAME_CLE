@@ -1,0 +1,22 @@
+body {
+    margin: 0px; padding: 0px;
+}
+
+game * {
+    position: absolute;
+    display: block;
+}
+
+game {
+    width: 800px;
+    height: 600px;
+    border: 2px solid Yellow;
+}
+
+ball {
+    width: 100px;
+    height: 100px;
+    border-radius: 25px;
+    background-color: Red;
+    
+}
