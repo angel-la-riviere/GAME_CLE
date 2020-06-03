@@ -48,9 +48,9 @@ objecten{
 }
 powerups{
     width: 50px;
-    height: 38px;
-    background-size: 50px 38px;
-    background-image: url(../images/fireball.png);
+    height: 50px;
+    background-size: 50px 50px;
+    background-image: url(../images/coin.png);
 }
 test{
     width: 100%;

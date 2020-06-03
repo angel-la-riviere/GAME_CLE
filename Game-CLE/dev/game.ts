@@ -3,6 +3,7 @@ class Game {
     private ball : Ball[] = []
     objecten : Objecten
     public powerups : Powerups[] = []
+    private score : number = 0
     
 
     constructor() {
@@ -13,7 +14,7 @@ class Game {
         }
 
         this.objecten = new Objecten("Green")
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 10; i++) {
             this.powerups.push(new Powerups("Red"))
         }
 
@@ -34,7 +35,7 @@ class Game {
             if (this.checkCollision(ball.getRectangle(), powerup.getRectangle())) {
                 console.log("BOTSING MET PADDLE")
                 window.addEventListener("keyup", (e:KeyboardEvent) => this.powerup(e))
-                
+                this.addPoint(1)
                 powerup.powerup()
             }
         }
@@ -54,6 +55,14 @@ class Game {
             a.top <= b.bottom &&
             b.top <= a.bottom)
      }
+
+     private addPoint(player : number) {
+        if(player == 1) {
+           let score = document.getElementsByTagName("score")[0]
+           this.score++
+           score.innerHTML = "Score: "+this.score
+        }
+    }
      
      powerup(event:KeyboardEvent){
         switch(event.keyCode){
@@ -62,6 +71,8 @@ class Game {
                 break
         }
     }
+
 }
+
 
 window.addEventListener("load", () => new Game())
