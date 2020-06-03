@@ -13,8 +13,14 @@ class Ball {
         this.element.addEventListener("click", () => this.changeColor());
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
+        this.x = window.innerWidth / 2 - 50;
+        this.y = window.innerHeight - 130;
+    }
+    getRectangle() {
+        return this.element.getBoundingClientRect();
     }
     onKeyDown(event) {
+        console.log(event.keyCode);
         switch (event.keyCode) {
             case 38:
                 this.upSpeed = 5;
@@ -31,6 +37,7 @@ class Ball {
         }
     }
     onKeyUp(event) {
+        console.log(event.keyCode);
         switch (event.keyCode) {
             case 38:
                 this.upSpeed = 0;
@@ -51,26 +58,119 @@ class Ball {
         this.element.style.filter = `hue-rotate(${color}deg)`;
     }
     move() {
-        console.log("Ball is moving");
         this.x += this.rightSpeed;
         this.y += this.downSpeed;
         this.x -= this.leftSpeed;
         this.y -= this.upSpeed;
+        let newX = this.x - this.leftSpeed + this.rightSpeed;
+        let newY = this.y - this.leftSpeed + this.rightSpeed;
+        if (newX + 130 > window.innerWidth)
+            this.x = window.innerWidth - 130;
+        if (newY + 130 > window.innerHeight)
+            this.y = window.innerHeight - 130;
+        if (this.x < 30)
+            this.x = 30;
+        if (this.y < 30)
+            this.y = 30;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+    }
+    gameover() {
+        this.x = window.innerWidth / 2 - 50;
+        this.y = window.innerHeight - 130;
+        this.Gameover = document.createElement("test");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.Gameover);
+        this.Gameover.innerHTML = "Game Over!";
     }
 }
 class Game {
     constructor() {
+        this.ball = [];
+        this.powerups = [];
         console.log("Game created!");
-        this.ball = new Ball("Red");
-        this.ball2 = new Ball("Green");
+        for (let i = 0; i < 2; i++) {
+            this.ball.push(new Ball("Red"));
+        }
+        this.objecten = new Objecten("Green");
+        for (let i = 0; i < 4; i++) {
+            this.powerups.push(new Powerups("Red"));
+        }
         this.gameLoop();
     }
     gameLoop() {
-        this.ball.move();
-        this.ball2.move();
+        for (const ball of this.ball) {
+            ball.move();
+            if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle())) {
+                console.log("BOTSING MET PADDLE");
+                ball.gameover();
+            }
+            for (const powerup of this.powerups) {
+                powerup.update();
+                if (this.checkCollision(ball.getRectangle(), powerup.getRectangle())) {
+                    console.log("BOTSING MET PADDLE");
+                    window.addEventListener("keyup", (e) => this.powerup(e));
+                    powerup.powerup();
+                }
+            }
+        }
+        this.objecten.update();
         requestAnimationFrame(() => this.gameLoop());
+    }
+    checkCollision(a, b) {
+        return (a.left <= b.right &&
+            b.left <= a.right &&
+            a.top <= b.bottom &&
+            b.top <= a.bottom);
+    }
+    powerup(event) {
+        switch (event.keyCode) {
+            case 90:
+                console.log("Je hebt vuurballen.");
+                break;
+        }
     }
 }
 window.addEventListener("load", () => new Game());
+class Objecten {
+    constructor(color) {
+        this.x = 0;
+        this.y = 0;
+        console.log(color);
+        this.element = document.createElement("objecten");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.element);
+        this.x = -130;
+        this.y = window.innerHeight - 280;
+    }
+    getRectangle() {
+        return this.element.getBoundingClientRect();
+    }
+    update() {
+        this.x += 2;
+        if (this.x > window.innerWidth)
+            this.x = -130;
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+    }
+}
+class Powerups {
+    constructor(color) {
+        this.x = 0;
+        this.y = 0;
+        console.log(color);
+        this.element = document.createElement("powerups");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.element);
+        this.x = Math.random() * window.innerWidth - 50;
+        this.y = Math.random() * window.innerHeight - 50;
+    }
+    getRectangle() {
+        return this.element.getBoundingClientRect();
+    }
+    update() {
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+    }
+    powerup() {
+        this.element.remove();
+    }
+}
 //# sourceMappingURL=main.js.map
