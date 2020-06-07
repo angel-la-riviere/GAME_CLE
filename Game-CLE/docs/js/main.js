@@ -70,17 +70,10 @@ class Ball {
             this.y = window.innerHeight - 130;
         if (this.x < 30)
             this.x = 30;
-        if (this.y < 30)
-            this.y = 30;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
     gameover() {
-        this.x = window.innerWidth / 2 - 50;
-        this.y = window.innerHeight - 130;
-        this.Gameover = document.createElement("test");
-        let game = document.getElementsByTagName("game")[0];
-        game.appendChild(this.Gameover);
-        this.Gameover.innerHTML = "Game Over!";
+        this.element.remove();
     }
 }
 class Game {
@@ -89,7 +82,7 @@ class Game {
         this.powerups = [];
         this.score = 0;
         console.log("Game created!");
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 1; i++) {
             this.ball.push(new Ball("Red"));
         }
         this.objecten = new Objecten("Green");
@@ -101,17 +94,28 @@ class Game {
     gameLoop() {
         for (const ball of this.ball) {
             ball.move();
-            if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle())) {
-                console.log("BOTSING MET PADDLE");
-                ball.gameover();
-            }
+            document.getElementById('background').style.backgroundPositionY = ball.y + 130 + 'px';
             for (const powerup of this.powerups) {
-                powerup.update();
-                if (this.checkCollision(ball.getRectangle(), powerup.getRectangle())) {
+                if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle1())) {
                     console.log("BOTSING MET PADDLE");
-                    window.addEventListener("keyup", (e) => this.powerup(e));
-                    this.addPoint(1);
-                    powerup.powerup();
+                    this.gameover();
+                }
+                if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle2())) {
+                    console.log("BOTSING MET PADDLE");
+                    this.gameover();
+                }
+                if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle3())) {
+                    console.log("BOTSING MET PADDLE");
+                    this.gameover();
+                }
+                for (const powerup of this.powerups) {
+                    powerup.update();
+                    if (this.checkCollision(ball.getRectangle(), powerup.getRectangle())) {
+                        console.log("BOTSING MET PADDLE");
+                        window.addEventListener("keyup", (e) => this.powerup(e));
+                        this.addPoint(1);
+                        powerup.powerup();
+                    }
                 }
             }
         }
@@ -138,27 +142,78 @@ class Game {
                 break;
         }
     }
+    gameover() {
+        for (const ball of this.ball) {
+            let game = document.getElementsByTagName("game")[0];
+            game.removeChild(ball.element);
+            game.removeChild(this.objecten.plane1);
+            game.removeChild(this.objecten.plane2);
+            game.removeChild(this.objecten.plane3);
+            for (const poweruppen of this.powerups) {
+                let game2 = document.getElementsByTagName("game")[this.score];
+                game2.removeChild(poweruppen.element);
+            }
+        }
+        this.Gameover = document.createElement("test");
+        let scores = document.createElement("final_score");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.Gameover);
+        game.appendChild(scores);
+        this.Gameover.innerHTML = "Game Over!";
+        scores.innerHTML = "Score: " + this.score;
+    }
 }
 window.addEventListener("load", () => new Game());
 class Objecten {
     constructor(color) {
-        this.x = 0;
-        this.y = 0;
+        this.plane1x = 0;
+        this.plane1y = 0;
+        this.plane2x = 0;
+        this.plane2y = 0;
+        this.plane3x = 0;
+        this.plane3y = 0;
         console.log(color);
-        this.element = document.createElement("objecten");
+        this.plane1 = document.createElement("plane");
+        this.plane2 = document.createElement("plane");
+        this.plane3 = document.createElement("plane");
         let game = document.getElementsByTagName("game")[0];
-        game.appendChild(this.element);
-        this.x = -130;
-        this.y = window.innerHeight - 280;
+        game.appendChild(this.plane1);
+        game.appendChild(this.plane2);
+        game.appendChild(this.plane3);
+        this.plane1x = -150;
+        this.plane1y = window.innerHeight - 200;
+        this.plane2x = -250;
+        this.plane2y = window.innerHeight / 2 - 50;
+        this.plane3x = -120;
+        this.plane3y = window.innerHeight / 6 - 50;
     }
-    getRectangle() {
-        return this.element.getBoundingClientRect();
+    getRectangle1() {
+        return this.plane1.getBoundingClientRect();
+    }
+    getRectangle2() {
+        return this.plane2.getBoundingClientRect();
+    }
+    getRectangle3() {
+        return this.plane3.getBoundingClientRect();
     }
     update() {
-        this.x += 2;
-        if (this.x > window.innerWidth)
-            this.x = -130;
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.plane1x += 2;
+        if (this.plane1x > window.innerWidth)
+            this.plane1x = -130;
+        this.plane1.style.transform = `translate(${this.plane1x}px, ${this.plane1y}px)`;
+        this.plane2x += 2;
+        if (this.plane2x > window.innerWidth)
+            this.plane2x = -130;
+        this.plane2.style.transform = `translate(${this.plane2x}px, ${this.plane2y}px)`;
+        this.plane3x += 2;
+        if (this.plane3x > window.innerWidth)
+            this.plane3x = -130;
+        this.plane3.style.transform = `translate(${this.plane3x}px, ${this.plane3y}px)`;
+    }
+    gameover() {
+        this.plane1.remove();
+        this.plane2.remove();
+        this.plane3.remove();
     }
 }
 class Powerups {

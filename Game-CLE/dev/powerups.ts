@@ -31,6 +31,8 @@ class Powerups {
         this.element.remove()
     }
 
+    
+
 
 
 

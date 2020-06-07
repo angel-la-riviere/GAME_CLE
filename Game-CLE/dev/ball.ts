@@ -49,6 +49,7 @@ class Ball {
             this.rightSpeed = 5
             break
         }
+        
     }
     
     onKeyUp(event:KeyboardEvent):void {
@@ -85,6 +86,8 @@ class Ball {
         this.x -= this.leftSpeed
         this.y -= this.upSpeed
 
+        
+
         let newX = this.x - this.leftSpeed + this.rightSpeed
         let newY = this.y - this.leftSpeed + this.rightSpeed
 
@@ -92,19 +95,12 @@ class Ball {
         if (newX + 130 > window.innerWidth) this.x = window.innerWidth - 130
         if (newY + 130 > window.innerHeight) this.y = window.innerHeight - 130
         if (this.x < 30) this.x = 30
-        if (this.y < 30) this.y = 30
+        
 
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
     }
 
     public gameover(){
-        this.x = window.innerWidth / 2 - 50
-        this.y = window.innerHeight - 130
-        this.Gameover = document.createElement("test")
-
-        let game = document.getElementsByTagName("game")[0]
-
-        game.appendChild(this.Gameover)
-        this.Gameover.innerHTML = "Game Over!"
+        this.element.remove()
     }
 }
