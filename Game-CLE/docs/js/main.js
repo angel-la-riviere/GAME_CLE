@@ -23,16 +23,16 @@ class Ball {
         console.log(event.keyCode);
         switch (event.keyCode) {
             case 38:
-                this.upSpeed = 5;
+                this.upSpeed = 2;
                 break;
             case 40:
-                this.downSpeed = 5;
+                this.downSpeed = 2;
                 break;
             case 37:
-                this.leftSpeed = 5;
+                this.leftSpeed = 2;
                 break;
             case 39:
-                this.rightSpeed = 5;
+                this.rightSpeed = 2;
                 break;
         }
     }
@@ -78,13 +78,16 @@ class Ball {
 class Game {
     constructor() {
         this.ball = [];
+        this.objecten = [];
         this.powerups = [];
         this.score = 0;
         console.log("Game created!");
         for (let i = 0; i < 1; i++) {
             this.ball.push(new Ball("Red"));
         }
-        this.objecten = new Objecten("Green");
+        for (let i = 0; i < 3; i++) {
+            this.objecten.push(new Objecten(-100, i * 350 + 60, this));
+        }
         for (let i = 0; i < 10; i++) {
             this.powerups.push(new Powerups("Red"));
         }
@@ -92,33 +95,27 @@ class Game {
     }
     gameLoop() {
         for (const ball of this.ball) {
-            ball.move();
-            document.getElementById('background').style.backgroundPositionY = ball.y + 130 + 'px';
-            for (const powerup of this.powerups) {
-                if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle1())) {
-                    console.log("BOTSING MET PADDLE");
-                    this.gameover();
-                }
-                if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle2())) {
-                    console.log("BOTSING MET PADDLE");
-                    this.gameover();
-                }
-                if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle3())) {
-                    console.log("BOTSING MET PADDLE");
-                    this.gameover();
-                }
+            for (const objecten of this.objecten) {
+                ball.move();
+                document.getElementById('background').style.backgroundPositionY = ball.y + 130 + 'px';
                 for (const powerup of this.powerups) {
-                    powerup.update();
-                    if (this.checkCollision(ball.getRectangle(), powerup.getRectangle())) {
+                    if (this.checkCollision(ball.getRectangle(), objecten.getRectangle1())) {
                         console.log("BOTSING MET PADDLE");
-                        window.addEventListener("keyup", (e) => this.powerup(e));
-                        this.addPoint(1);
-                        powerup.powerup();
+                        this.gameover();
+                    }
+                    for (const powerup of this.powerups) {
+                        powerup.update();
+                        if (this.checkCollision(ball.getRectangle(), powerup.getRectangle())) {
+                            console.log("BOTSING MET PADDLE");
+                            window.addEventListener("keyup", (e) => this.powerup(e));
+                            this.addPoint(1);
+                            powerup.powerup();
+                        }
                     }
                 }
+                objecten.update();
             }
         }
-        this.objecten.update();
         requestAnimationFrame(() => this.gameLoop());
     }
     checkCollision(a, b) {
@@ -142,13 +139,6 @@ class Game {
         }
     }
     gameover() {
-        for (const ball of this.ball) {
-            let game = document.getElementsByTagName("game")[0];
-            game.removeChild(ball.element);
-            game.removeChild(this.objecten.plane1);
-            game.removeChild(this.objecten.plane2);
-            game.removeChild(this.objecten.plane3);
-        }
         this.Gameover = document.createElement("test");
         let scores = document.createElement("final_score");
         let game = document.getElementsByTagName("game")[0];
@@ -156,46 +146,33 @@ class Game {
         game.appendChild(scores);
         this.Gameover.innerHTML = "Game Over!";
         scores.innerHTML = "Score: " + this.score;
+        for (const ball of this.ball) {
+            for (const objecten of this.objecten) {
+                let game = document.getElementsByTagName("game")[0];
+                game.removeChild(ball.element);
+            }
+        }
     }
 }
 window.addEventListener("load", () => new Game());
 class Objecten {
-    constructor(color) {
+    constructor(x, y, g) {
         this.leftSpeed = 0;
         this.rightSpeed = 0;
         this.downSpeed = 0;
         this.upSpeed = 0;
         this.plane1x = 0;
         this.plane1y = 0;
-        this.plane2x = 0;
-        this.plane2y = 0;
-        this.plane3x = 0;
-        this.plane3y = 0;
-        console.log(color);
         window.addEventListener("keydown", (e) => this.onKeyDown(e));
         window.addEventListener("keyup", (e) => this.onKeyUp(e));
         this.plane1 = document.createElement("plane");
-        this.plane2 = document.createElement("plane");
-        this.plane3 = document.createElement("plane");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.plane1);
-        game.appendChild(this.plane2);
-        game.appendChild(this.plane3);
-        this.plane1x = -150;
-        this.plane1y = window.innerHeight - 200;
-        this.plane2x = -250;
-        this.plane2y = window.innerHeight / 2 - 50;
-        this.plane3x = -120;
-        this.plane3y = window.innerHeight / 6 - 50;
+        this.plane1x = x;
+        this.plane1y = y;
     }
     getRectangle1() {
         return this.plane1.getBoundingClientRect();
-    }
-    getRectangle2() {
-        return this.plane2.getBoundingClientRect();
-    }
-    getRectangle3() {
-        return this.plane3.getBoundingClientRect();
     }
     onKeyDown(event) {
         console.log(event.keyCode);
@@ -237,24 +214,14 @@ class Objecten {
         this.plane1y -= this.upSpeed;
         if (this.plane1x > window.innerWidth)
             this.plane1x = -130;
+        if (this.plane1y > window.innerHeight + 15)
+            this.plane1y = -50;
+        if (this.plane1y < -50)
+            this.plane1y = window.innerHeight + 20;
         this.plane1.style.transform = `translate(${this.plane1x}px, ${this.plane1y}px)`;
-        this.plane2x += 2;
-        this.plane2y += this.downSpeed;
-        this.plane2y -= this.upSpeed;
-        if (this.plane2x > window.innerWidth)
-            this.plane2x = -130;
-        this.plane2.style.transform = `translate(${this.plane2x}px, ${this.plane2y}px)`;
-        this.plane3x += 2;
-        this.plane3y += this.downSpeed;
-        this.plane3y -= this.upSpeed;
-        if (this.plane3x > window.innerWidth)
-            this.plane3x = -130;
-        this.plane3.style.transform = `translate(${this.plane3x}px, ${this.plane3y}px)`;
     }
     gameover() {
         this.plane1.remove();
-        this.plane2.remove();
-        this.plane3.remove();
     }
 }
 class Powerups {

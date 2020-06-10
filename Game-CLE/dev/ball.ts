@@ -37,16 +37,16 @@ class Ball {
 
         switch(event.keyCode){
         case 38:
-            this.upSpeed = 5
+            this.upSpeed = 2
             break
         case 40:
-            this.downSpeed = 5
+            this.downSpeed = 2
             break
         case 37:
-            this.leftSpeed = 5
+            this.leftSpeed = 2
             break
         case 39:
-            this.rightSpeed = 5
+            this.rightSpeed = 2
             break
         }
         

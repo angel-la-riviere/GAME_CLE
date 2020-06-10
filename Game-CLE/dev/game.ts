@@ -1,7 +1,7 @@
 class Game {
     
     private ball : Ball[] = []
-    objecten : Objecten
+    objecten : Objecten[] = []
     public powerups : Powerups[] = []
     private score : number = 0
     Gameover : HTMLElement
@@ -15,8 +15,11 @@ class Game {
             this.ball.push(new Ball("Red"))
         }
 
-        this.objecten = new Objecten("Green")
+        // this.objecten = new Objecten("Green")
 
+        for (let i = 0; i < 3; i++) {
+            this.objecten.push(new Objecten(-100, i * 350 + 60, this))
+        }
         
         for (let i = 0; i < 10; i++) {
             this.powerups.push(new Powerups("Red"))
@@ -27,27 +30,17 @@ class Game {
 
     gameLoop() {
     for (const ball of this.ball) {
+        for (const objecten of this.objecten) {
         ball.move()
         
         document.getElementById('background').style.backgroundPositionY =  ball.y + 130 + 'px';
         for (const powerup of this.powerups) {
-        if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle1())) {
+        if (this.checkCollision(ball.getRectangle(), objecten.getRectangle1())) {
             console.log("BOTSING MET PADDLE")
             this.gameover()
             // this.objecten.gameover()
         }
 
-        if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle2())) {
-            console.log("BOTSING MET PADDLE")
-            this.gameover()
-            // this.objecten.gameover()
-        }
-
-        if (this.checkCollision(ball.getRectangle(), this.objecten.getRectangle3())) {
-            console.log("BOTSING MET PADDLE")
-            this.gameover()
-            // this.objecten.gameover()
-        }
 
         for (const powerup of this.powerups) {
             powerup.update()
@@ -61,8 +54,12 @@ class Game {
 
         
     }
+    objecten.update()
+}
     }
-        this.objecten.update()
+    
+        
+    
 
         
         
@@ -96,13 +93,6 @@ class Game {
     
 
     public gameover(){
-        for (const ball of this.ball) {
-            let game = document.getElementsByTagName("game")[0]
-            game.removeChild(ball.element)
-            game.removeChild(this.objecten.plane1)
-            game.removeChild(this.objecten.plane2)
-            game.removeChild(this.objecten.plane3)
-        }
 
         this.Gameover = document.createElement("test")
         let scores = document.createElement("final_score")
@@ -114,6 +104,13 @@ class Game {
         this.Gameover.innerHTML = "Game Over!"
 
         scores.innerHTML = "Score: "+this.score
+
+        for (const ball of this.ball) {
+            for (const objecten of this.objecten) {
+            let game = document.getElementsByTagName("game")[0]
+            game.removeChild(ball.element)
+            }
+        }
         
     }
 
