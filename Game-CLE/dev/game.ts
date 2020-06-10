@@ -16,6 +16,8 @@ class Game {
         }
 
         this.objecten = new Objecten("Green")
+
+        
         for (let i = 0; i < 10; i++) {
             this.powerups.push(new Powerups("Red"))
         }
@@ -100,10 +102,6 @@ class Game {
             game.removeChild(this.objecten.plane1)
             game.removeChild(this.objecten.plane2)
             game.removeChild(this.objecten.plane3)
-        for (const poweruppen of this.powerups){
-            let game2 = document.getElementsByTagName("game")[this.score]
-            game2.removeChild(poweruppen.element)
-        }
         }
 
         this.Gameover = document.createElement("test")

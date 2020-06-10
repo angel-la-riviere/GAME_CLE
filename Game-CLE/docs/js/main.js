@@ -73,7 +73,6 @@ class Ball {
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
     gameover() {
-        this.element.remove();
     }
 }
 class Game {
@@ -149,10 +148,6 @@ class Game {
             game.removeChild(this.objecten.plane1);
             game.removeChild(this.objecten.plane2);
             game.removeChild(this.objecten.plane3);
-            for (const poweruppen of this.powerups) {
-                let game2 = document.getElementsByTagName("game")[this.score];
-                game2.removeChild(poweruppen.element);
-            }
         }
         this.Gameover = document.createElement("test");
         let scores = document.createElement("final_score");
@@ -166,6 +161,10 @@ class Game {
 window.addEventListener("load", () => new Game());
 class Objecten {
     constructor(color) {
+        this.leftSpeed = 0;
+        this.rightSpeed = 0;
+        this.downSpeed = 0;
+        this.upSpeed = 0;
         this.plane1x = 0;
         this.plane1y = 0;
         this.plane2x = 0;
@@ -173,6 +172,8 @@ class Objecten {
         this.plane3x = 0;
         this.plane3y = 0;
         console.log(color);
+        window.addEventListener("keydown", (e) => this.onKeyDown(e));
+        window.addEventListener("keyup", (e) => this.onKeyUp(e));
         this.plane1 = document.createElement("plane");
         this.plane2 = document.createElement("plane");
         this.plane3 = document.createElement("plane");
@@ -196,16 +197,56 @@ class Objecten {
     getRectangle3() {
         return this.plane3.getBoundingClientRect();
     }
+    onKeyDown(event) {
+        console.log(event.keyCode);
+        switch (event.keyCode) {
+            case 38:
+                this.upSpeed = -5;
+                break;
+            case 40:
+                this.downSpeed = -5;
+                break;
+            case 37:
+                this.leftSpeed = -5;
+                break;
+            case 39:
+                this.rightSpeed = -5;
+                break;
+        }
+    }
+    onKeyUp(event) {
+        console.log(event.keyCode);
+        switch (event.keyCode) {
+            case 38:
+                this.upSpeed = 0;
+                break;
+            case 40:
+                this.downSpeed = 0;
+                break;
+            case 37:
+                this.leftSpeed = 0;
+                break;
+            case 39:
+                this.rightSpeed = 0;
+                break;
+        }
+    }
     update() {
         this.plane1x += 2;
+        this.plane1y += this.downSpeed;
+        this.plane1y -= this.upSpeed;
         if (this.plane1x > window.innerWidth)
             this.plane1x = -130;
         this.plane1.style.transform = `translate(${this.plane1x}px, ${this.plane1y}px)`;
         this.plane2x += 2;
+        this.plane2y += this.downSpeed;
+        this.plane2y -= this.upSpeed;
         if (this.plane2x > window.innerWidth)
             this.plane2x = -130;
         this.plane2.style.transform = `translate(${this.plane2x}px, ${this.plane2y}px)`;
         this.plane3x += 2;
+        this.plane3y += this.downSpeed;
+        this.plane3y -= this.upSpeed;
         if (this.plane3x > window.innerWidth)
             this.plane3x = -130;
         this.plane3.style.transform = `translate(${this.plane3x}px, ${this.plane3y}px)`;

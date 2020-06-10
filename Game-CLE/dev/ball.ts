@@ -101,6 +101,7 @@ class Ball {
     }
 
     public gameover(){
-        this.element.remove()
+
+        
     }
 }

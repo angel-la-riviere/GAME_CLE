@@ -34,11 +34,11 @@ button{
 }
 
 ball {
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 75px;
     border-radius: 25px;
     background-image: url(../images/player.png); 
-    background-size: 100px 100px;
+    background-size: 75px 75px;
 }
 plane{
     width: 100px;

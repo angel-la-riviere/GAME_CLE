@@ -1,6 +1,11 @@
 class Objecten {
 
 
+    leftSpeed : number = 0
+    rightSpeed : number = 0
+    downSpeed : number = 0
+    upSpeed : number = 0
+
     plane1 : HTMLElement
     plane1x : number = 0
     plane1y : number = 0
@@ -26,6 +31,10 @@ class Objecten {
 
     constructor(color: string) {
         console.log(color)
+
+        window.addEventListener("keydown", (e:KeyboardEvent) => this.onKeyDown(e))
+        window.addEventListener("keyup", (e:KeyboardEvent) => this.onKeyUp(e))
+
         this.plane1 = document.createElement("plane")
 
         this.plane2 = document.createElement("plane")
@@ -50,18 +59,67 @@ class Objecten {
     
 
     }
+
+    onKeyDown(event:KeyboardEvent):void {
+        console.log(event.keyCode)
+
+        switch(event.keyCode){
+        case 38:
+            this.upSpeed = -5
+            break
+        case 40:
+            this.downSpeed = -5
+            break
+        case 37:
+            this.leftSpeed = -5
+            break
+        case 39:
+            this.rightSpeed = -5
+            break
+        }
+        
+    }
+    
+    onKeyUp(event:KeyboardEvent):void {
+        console.log(event.keyCode)
+        switch(event.keyCode){
+        case 38:
+            this.upSpeed = 0
+            break
+        case 40:
+            this.downSpeed = 0
+            break
+        case 37:
+            this.leftSpeed = 0
+            break
+        case 39:
+            this.rightSpeed = 0
+            break
+        }
+    }
     
     public update() : void { 
         // console.log("Ball is moving")
         this.plane1x += 2
+
+        this.plane1y += this.downSpeed
+
+        this.plane1y -= this.upSpeed
+
         if(this.plane1x > window.innerWidth) this.plane1x = - 130
         this.plane1.style.transform = `translate(${this.plane1x}px, ${this.plane1y}px)`
 
         this.plane2x += 2
+        this.plane2y += this.downSpeed
+        this.plane2y -= this.upSpeed
+
         if(this.plane2x > window.innerWidth) this.plane2x = - 130
         this.plane2.style.transform = `translate(${this.plane2x}px, ${this.plane2y}px)`
 
         this.plane3x += 2
+        this.plane3y += this.downSpeed
+        this.plane3y -= this.upSpeed
+
         if(this.plane3x > window.innerWidth) this.plane3x = - 130
         this.plane3.style.transform = `translate(${this.plane3x}px, ${this.plane3y}px)`
     }
