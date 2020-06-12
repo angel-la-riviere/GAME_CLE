@@ -2,6 +2,7 @@ class Game {
     
     private ball : Ball[] = []
     objecten : Objecten[] = []
+    clouds : Clouds[] = []
     public powerups : Powerups[] = []
     private score : number = 0
     Gameover : HTMLElement
@@ -14,7 +15,9 @@ class Game {
         for (let i = 0; i < 1; i++) {
             this.ball.push(new Ball("Red"))
         }
-
+        for (let i = 0; i < 12; i++) {
+            this.clouds.push(new Clouds(-100, i * 350 + 60, this))
+        }
         // this.objecten = new Objecten("Green")
 
         for (let i = 0; i < 3; i++) {
@@ -31,7 +34,10 @@ class Game {
     gameLoop() {
     for (const ball of this.ball) {
         for (const objecten of this.objecten) {
+            
         ball.move()
+        objecten.update()
+       
         
         document.getElementById('background').style.backgroundPositionY =  ball.y + 130 + 'px';
         for (const powerup of this.powerups) {
@@ -52,18 +58,14 @@ class Game {
             }
         }
 
-        
+    
     }
-    objecten.update()
 }
     }
+    for (const clouds of this.clouds) {
+        clouds.update()
+    }
     
-        
-    
-
-        
-        
-       
 
         requestAnimationFrame(() => this.gameLoop())
     }
@@ -94,6 +96,16 @@ class Game {
 
     public gameover(){
 
+        let btn = document.getElementById("playagainbutton");
+        let btn2 = document.getElementById("scoreopslaanbutton");
+
+        document.getElementById("playagainbutton").style.display = "block"
+        document.getElementById("scoreopslaanbutton").style.display = "block"
+
+        btn.addEventListener("click", (e:Event) => this.playAgain(4));
+
+        btn2.addEventListener("click", (e:Event) => this.scoreSave(4));
+
         this.Gameover = document.createElement("test")
         let scores = document.createElement("final_score")
 
@@ -112,6 +124,44 @@ class Game {
             }
         }
         
+    }
+
+    playAgain(n:number){
+        location.reload();
+    }
+
+    scoreSave(n:number){ 
+    document.getElementById("playagainbutton").style.display = "none"
+    document.getElementById("scoreopslaanbutton").style.display = "none"
+    this.Gameover.innerHTML = "Score opslaan"
+    document.getElementById("group").style.display = "block"
+
+    document.getElementById("save").style.display = "block"
+
+    let btnSave = document.getElementById("save");
+    btnSave.addEventListener("click", (e:Event) => this.toDataBase(4));
+    }
+
+    toDataBase(n:number){
+        var score = this.score;
+
+        var name = $('input[name="name"]').val();
+
+        $.ajax({    //create an ajax request to display.php
+            type: "POST",
+            url: "display.php",
+            data: {
+                score: score,
+                name: name
+            },       
+            dataType: "html",   //expect html to be returned                
+            success: function(response){                    
+                $("#div1").html(response); 
+                console.log("njisdndfbjhdsbjh")
+            }
+        });
+
+        location.reload();
     }
 
 }

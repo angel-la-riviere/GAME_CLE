@@ -1,10 +1,10 @@
 body {
-    margin: 0px; padding: 0px;
+    margin: 0px; padding: 0px!important;
     background-repeat: no-repeat;
-    font-family: 'Press Start 2P', cursive;
-    color:white;
-    font-size:22px;
-    overflow:hidden;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif!important;
+    color:white!important;
+    font-size:22px!important;
+    overflow:hidden!important;
 }
 
 game * {
@@ -19,11 +19,31 @@ game {
 }
 
 score{
-    margin:15px;
+    margin:10px;
+    font-size:30px;
+    z-index:9999;
 }
-button{
-    font-size:20px;
-    margin-top:60px;
+#playagainbutton{
+    position: fixed; /* or absolute */
+    top: 60%;
+    font-size:18px;
+    text-align:center;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display:none;
+    z-index:99999;
+}
+#scoreopslaanbutton{
+    position: fixed; /* or absolute */
+    top: 64%;
+    font-size:18px;
+    text-align:center;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display:none;
+    z-index:99999;
 }
 
 .title{
@@ -39,6 +59,7 @@ ball {
     border-radius: 25px;
     background-image: url(../images/player.png); 
     background-size: 75px 75px;
+    z-index:9999;
 }
 plane{
     width: 100px;
@@ -47,7 +68,7 @@ plane{
     margin:10px;
     border-radius: 25px;
     background-size: 100px 100px;
-    background-image: url(../images/plane.png);
+    background-image: url(../images/plane2.png);
 }
 powerups{
     width: 50px;
@@ -70,7 +91,7 @@ final_score{
     width: 100%;
     height: 25%;
     position: fixed; /* or absolute */
-    top: 50%;
+    top: 48%;
     padding-top:20px;
     font-size:40px;
     text-align:center;
@@ -78,9 +99,106 @@ final_score{
 }
 
 #background { 
-    background-image:url("../images/background.png");
+    background-image:url("../images/background2.png");
     background-repeat: repeat;
     background-size:cover;
     width: 100%;
     height:100%;
 }
+
+cloud{
+    width: 100px;
+    height: 100px;
+    transform: rotate(45deg);
+    margin:10px;
+    border-radius: 25px;
+    background-size: 100px 100px;
+    background-image: url(../images/cloud.png);
+}
+
+input{
+font-size:30px;
+}
+
+
+#group 			  { 
+    width:300px;
+    position: fixed; /* or absolute */
+    top: 56%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%)!important;
+    text-align:center;
+    z-index:9999;
+    display:none;
+  }
+  input 				{
+    font-size:18px;
+    padding:10px 10px 10px 5px;
+    display:block;
+    width:300px;
+    border:none;
+    border-bottom:1px solid #757575;
+  }
+  input:focus 		{ outline:none; }
+  
+  /* LABEL ======================================= */
+  label 				 {
+    color:#999; 
+    font-size:18px;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:5px;
+    top:10px;
+    transition:0.2s ease all; 
+    -moz-transition:0.2s ease all; 
+    -webkit-transition:0.2s ease all;
+  }
+  
+  /* active state */
+  input:focus ~ label, input:valid ~ label 		{
+    top:-20px;
+    font-size:14px;
+    color:white;
+  }
+
+  /* active state */
+  input:focus ~ .highlight {
+    -webkit-animation:inputHighlighter 0.3s ease;
+    -moz-animation:inputHighlighter 0.3s ease;
+    animation:inputHighlighter 0.3s ease;
+  }
+  
+  /* ANIMATIONS ================ */
+  @-webkit-keyframes inputHighlighter {
+      from { background:#5264AE; }
+    to 	{ width:0; background:transparent; }
+  }
+  @-moz-keyframes inputHighlighter {
+      from { background:#5264AE; }
+    to 	{ width:0; background:transparent; }
+  }
+  @keyframes inputHighlighter {
+      from { background:#5264AE; }
+    to 	{ width:0; background:transparent; }
+  }
+
+  #save{
+    position: fixed; /* or absolute */
+    top: 63.3%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%)!important;
+    width:315px;
+    padding:10px 10px 10px 5px;
+    background-color:transparent;
+    border:3px solid white;
+    color:white;
+    text-align:center;
+    z-index:9999;
+    cursor:pointer;
+    display:none;
+    font-size:15px;
+  }
+

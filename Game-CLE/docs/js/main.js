@@ -22,9 +22,6 @@ class Ball {
     onKeyDown(event) {
         console.log(event.keyCode);
         switch (event.keyCode) {
-            case 38:
-                this.upSpeed = 2;
-                break;
             case 40:
                 this.downSpeed = 2;
                 break;
@@ -39,9 +36,6 @@ class Ball {
     onKeyUp(event) {
         console.log(event.keyCode);
         switch (event.keyCode) {
-            case 38:
-                this.upSpeed = 0;
-                break;
             case 40:
                 this.downSpeed = 0;
                 break;
@@ -75,15 +69,72 @@ class Ball {
     gameover() {
     }
 }
+class Clouds {
+    constructor(x, y, g) {
+        this.leftSpeed = 0;
+        this.rightSpeed = 0;
+        this.downSpeed = 0;
+        this.upSpeed = 0;
+        this.x = 0;
+        this.y = 0;
+        window.addEventListener("keydown", (e) => this.onKeyDown(e));
+        window.addEventListener("keyup", (e) => this.onKeyUp(e));
+        this.cloud = document.createElement("cloud");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.cloud);
+        this.x = Math.random() * window.innerWidth - 50;
+        this.y = Math.random() * window.innerHeight - 50;
+    }
+    onKeyDown(event) {
+        console.log(event.keyCode);
+        switch (event.keyCode) {
+            case 38:
+                this.upSpeed = -5;
+                break;
+            case 37:
+                this.leftSpeed = -5;
+                break;
+            case 39:
+                this.rightSpeed = -5;
+                break;
+        }
+    }
+    onKeyUp(event) {
+        console.log(event.keyCode);
+        switch (event.keyCode) {
+            case 38:
+                this.upSpeed = 0;
+                break;
+            case 37:
+                this.leftSpeed = 0;
+                break;
+            case 39:
+                this.rightSpeed = 0;
+                break;
+        }
+    }
+    update() {
+        this.y += 0.4;
+        this.y += this.downSpeed;
+        this.y -= this.upSpeed;
+        if (this.y > window.innerHeight + 15)
+            this.y = -50;
+        this.cloud.style.transform = `translate(${this.x}px, ${this.y}px)`;
+    }
+}
 class Game {
     constructor() {
         this.ball = [];
         this.objecten = [];
+        this.clouds = [];
         this.powerups = [];
         this.score = 0;
         console.log("Game created!");
         for (let i = 0; i < 1; i++) {
             this.ball.push(new Ball("Red"));
+        }
+        for (let i = 0; i < 12; i++) {
+            this.clouds.push(new Clouds(-100, i * 350 + 60, this));
         }
         for (let i = 0; i < 3; i++) {
             this.objecten.push(new Objecten(-100, i * 350 + 60, this));
@@ -97,6 +148,7 @@ class Game {
         for (const ball of this.ball) {
             for (const objecten of this.objecten) {
                 ball.move();
+                objecten.update();
                 document.getElementById('background').style.backgroundPositionY = ball.y + 130 + 'px';
                 for (const powerup of this.powerups) {
                     if (this.checkCollision(ball.getRectangle(), objecten.getRectangle1())) {
@@ -113,8 +165,10 @@ class Game {
                         }
                     }
                 }
-                objecten.update();
             }
+        }
+        for (const clouds of this.clouds) {
+            clouds.update();
         }
         requestAnimationFrame(() => this.gameLoop());
     }
@@ -139,6 +193,12 @@ class Game {
         }
     }
     gameover() {
+        let btn = document.getElementById("playagainbutton");
+        let btn2 = document.getElementById("scoreopslaanbutton");
+        document.getElementById("playagainbutton").style.display = "block";
+        document.getElementById("scoreopslaanbutton").style.display = "block";
+        btn.addEventListener("click", (e) => this.playAgain(4));
+        btn2.addEventListener("click", (e) => this.scoreSave(4));
         this.Gameover = document.createElement("test");
         let scores = document.createElement("final_score");
         let game = document.getElementsByTagName("game")[0];
@@ -152,6 +212,36 @@ class Game {
                 game.removeChild(ball.element);
             }
         }
+    }
+    playAgain(n) {
+        location.reload();
+    }
+    scoreSave(n) {
+        document.getElementById("playagainbutton").style.display = "none";
+        document.getElementById("scoreopslaanbutton").style.display = "none";
+        this.Gameover.innerHTML = "Score opslaan";
+        document.getElementById("group").style.display = "block";
+        document.getElementById("save").style.display = "block";
+        let btnSave = document.getElementById("save");
+        btnSave.addEventListener("click", (e) => this.toDataBase(4));
+    }
+    toDataBase(n) {
+        var score = this.score;
+        var name = $('input[name="name"]').val();
+        $.ajax({
+            type: "POST",
+            url: "display.php",
+            data: {
+                score: score,
+                name: name
+            },
+            dataType: "html",
+            success: function (response) {
+                $("#div1").html(response);
+                console.log("njisdndfbjhdsbjh");
+            }
+        });
+        location.reload();
     }
 }
 window.addEventListener("load", () => new Game());
@@ -180,9 +270,6 @@ class Objecten {
             case 38:
                 this.upSpeed = -5;
                 break;
-            case 40:
-                this.downSpeed = -5;
-                break;
             case 37:
                 this.leftSpeed = -5;
                 break;
@@ -196,9 +283,6 @@ class Objecten {
         switch (event.keyCode) {
             case 38:
                 this.upSpeed = 0;
-                break;
-            case 40:
-                this.downSpeed = 0;
                 break;
             case 37:
                 this.leftSpeed = 0;
@@ -214,7 +298,7 @@ class Objecten {
         this.plane1y -= this.upSpeed;
         if (this.plane1x > window.innerWidth)
             this.plane1x = -130;
-        if (this.plane1y > window.innerHeight + 15)
+        if (this.plane1y > window.innerHeight + 100)
             this.plane1y = -50;
         if (this.plane1y < -50)
             this.plane1y = window.innerHeight + 20;
@@ -228,7 +312,13 @@ class Powerups {
     constructor(color) {
         this.x = 0;
         this.y = 0;
+        this.leftSpeed = 0;
+        this.rightSpeed = 0;
+        this.downSpeed = 0;
+        this.upSpeed = 0;
         console.log(color);
+        window.addEventListener("keydown", (e) => this.onKeyDown(e));
+        window.addEventListener("keyup", (e) => this.onKeyUp(e));
         this.element = document.createElement("powerups");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
@@ -238,7 +328,39 @@ class Powerups {
     getRectangle() {
         return this.element.getBoundingClientRect();
     }
+    onKeyDown(event) {
+        console.log(event.keyCode);
+        switch (event.keyCode) {
+            case 38:
+                this.upSpeed = -0.2;
+                break;
+            case 37:
+                this.leftSpeed = -0.2;
+                break;
+            case 39:
+                this.rightSpeed = -0.2;
+                break;
+        }
+    }
+    onKeyUp(event) {
+        console.log(event.keyCode);
+        switch (event.keyCode) {
+            case 38:
+                this.upSpeed = 0;
+                break;
+            case 37:
+                this.leftSpeed = 0;
+                break;
+            case 39:
+                this.rightSpeed = 0;
+                break;
+        }
+    }
     update() {
+        this.y += this.downSpeed;
+        this.y -= this.upSpeed;
+        if (this.y > window.innerHeight + 15)
+            this.y = -50;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
     powerup() {

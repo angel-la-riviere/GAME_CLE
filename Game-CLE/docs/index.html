@@ -3,16 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Les1</title>
+    <title>Cross The Sky</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    
 </head>
 <body>
     <game>
     
         <background id="background"></background>
         <score name="score">Score: 0</score>
-        <button>Sla score op</button>
-        <div id="result" style="font-size:25px;"></div>
+        <button id="playagainbutton">Play Again</button>
+        <button id="scoreopslaanbutton">Score opslaan</button>
+        <div id="div1" style="top:200px;"></div>
+        <form>
+            <div id="group">      
+              <input type="text" name="name" id="inputfield" required>
+              <label>Naam</label>
+            </div>
+        </form>
+
+        <button id="save">Opslaan</button>
+        <!-- <div id="result" style="font-size:25px;"></div> -->
       </game>
     
     <script src="js/main.js"></script>

@@ -1,29 +1,24 @@
-class Powerups {
-
-
-    element : HTMLElement
-    x : number = 0
-    y : number = 0
+class Clouds {
 
     leftSpeed : number = 0
     rightSpeed : number = 0
     downSpeed : number = 0
     upSpeed : number = 0
 
-    public getRectangle() {
-        return this.element.getBoundingClientRect()
-    }
+    cloud : HTMLElement
+    x : number = 0
+    y : number = 0
 
-    constructor(color: string) {
-        console.log(color)
+    constructor(x:number, y:number, g : Game) {
+
         window.addEventListener("keydown", (e:KeyboardEvent) => this.onKeyDown(e))
         window.addEventListener("keyup", (e:KeyboardEvent) => this.onKeyUp(e))
 
-        this.element = document.createElement("powerups")
+        this.cloud = document.createElement("cloud")
 
         let game = document.getElementsByTagName("game")[0]
 
-        game.appendChild(this.element)
+        game.appendChild(this.cloud)
 
         this.x = Math.random() * window.innerWidth - 50
         this.y = Math.random() * window.innerHeight - 50
@@ -35,13 +30,13 @@ class Powerups {
 
         switch(event.keyCode){
         case 38:
-            this.upSpeed = -0.2
+            this.upSpeed = -5
             break
         case 37:
-            this.leftSpeed = -0.2
+            this.leftSpeed = -5
             break
         case 39:
-            this.rightSpeed = -0.2
+            this.rightSpeed = -5
             break
         }
         
@@ -61,27 +56,16 @@ class Powerups {
             break
         }
     }
-    
+
     public update() : void { 
         // console.log("Ball is moving")
+        this.y += 0.4
+
         this.y += this.downSpeed
 
         this.y -= this.upSpeed
 
         if(this.y > window.innerHeight + 15) this.y = - 50
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
+        this.cloud.style.transform = `translate(${this.x}px, ${this.y}px)`
     }
-
-    public powerup(){
-        this.element.remove()
-    }
-
-    
-
-
-
-
-
-
-    
 }

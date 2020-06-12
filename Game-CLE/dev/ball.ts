@@ -36,9 +36,6 @@ class Ball {
         console.log(event.keyCode)
 
         switch(event.keyCode){
-        case 38:
-            this.upSpeed = 2
-            break
         case 40:
             this.downSpeed = 2
             break
@@ -55,9 +52,6 @@ class Ball {
     onKeyUp(event:KeyboardEvent):void {
         console.log(event.keyCode)
         switch(event.keyCode){
-        case 38:
-            this.upSpeed = 0
-            break
         case 40:
             this.downSpeed = 0
             break

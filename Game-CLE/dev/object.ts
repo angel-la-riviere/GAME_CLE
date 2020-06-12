@@ -38,9 +38,6 @@ class Objecten {
         case 38:
             this.upSpeed = -5
             break
-        case 40:
-            this.downSpeed = -5
-            break
         case 37:
             this.leftSpeed = -5
             break
@@ -56,9 +53,6 @@ class Objecten {
         switch(event.keyCode){
         case 38:
             this.upSpeed = 0
-            break
-        case 40:
-            this.downSpeed = 0
             break
         case 37:
             this.leftSpeed = 0
@@ -78,7 +72,7 @@ class Objecten {
         this.plane1y -= this.upSpeed
 
         if(this.plane1x > window.innerWidth) this.plane1x = - 130
-        if(this.plane1y > window.innerHeight + 15) this.plane1y = - 50
+        if(this.plane1y > window.innerHeight + 100) this.plane1y = - 50
         if(this.plane1y < -50) this.plane1y = window.innerHeight + 20
         this.plane1.style.transform = `translate(${this.plane1x}px, ${this.plane1y}px)`
 
@@ -86,7 +80,6 @@ class Objecten {
 
     public gameover(){
         this.plane1.remove()
-
     }
 
 
