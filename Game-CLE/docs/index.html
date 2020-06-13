@@ -19,21 +19,31 @@
 </head>
 <body>
     <game>
-    
+        <!-- Background -->
         <background id="background"></background>
-        <score name="score">Score: 0</score>
-      <div id="buttons">
-        <button id="playagainbutton">Play Again</button>
-        <button id="scoreopslaanbutton">Score opslaan</button>
-        <button id="overzicht">Highscores</button>
-      </div>
 
-      <div id="back-arrow">
-        <i class="glyphicon glyphicon-chevron-left back-arrow" style="top:400px;left:10px;border:3px solid white;padding:5px;z-index:9999;cursor:pointer;"></i>     
-      </div> 
+        <!-- Scoreboard -->
+        <score name="score">Score: 0</score>
+
+        <!-- Buttons als het game over is. -->
+        <div id="buttons">
+          <button id="playagainbutton">Play Again</button>
+          <button id="scoreopslaanbutton">Score opslaan</button>
+          <button id="overzicht">Highscores</button>
+        </div>
+
+        <!-- Knop voor het terug gaan in het game over menu -->
+        <div id="back-arrow">
+          <i class="glyphicon glyphicon-chevron-left back-arrow" style="top:400px;left:10px;border:3px solid white;padding:5px;z-index:9999;cursor:pointer;"></i>     
+        </div> 
       
+        <!-- Connectie met database -->
         <div id="div1" style="top:200px;"></div>
+
+        <!-- Highscores laten zien -->
         <div id="div2"></div>
+
+        <!-- Form voor het opslaan van de score -->
         <form>
             <div id="group">      
               <input type="text" name="name" id="inputfield" required>
@@ -41,8 +51,8 @@
             </div>
         </form>
 
+        <!-- Knop voor het opslaan van de score -->
         <button id="save">Opslaan</button>
-        <!-- <div id="result" style="font-size:25px;"></div> -->
       </game>
     
     <script src="js/main.js"></script>

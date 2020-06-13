@@ -6,9 +6,9 @@ class Ball {
         this.upSpeed = 0;
         this.x = 0;
         this.y = 0;
+        console.log(color);
         window.addEventListener("keydown", (e) => this.onKeyDown(e));
         window.addEventListener("keyup", (e) => this.onKeyUp(e));
-        console.log(color);
         this.element = document.createElement("ball");
         this.element.addEventListener("click", () => this.changeColor());
         let game = document.getElementsByTagName("game")[0];
@@ -65,8 +65,6 @@ class Ball {
         if (this.x < 30)
             this.x = 30;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
-    }
-    gameover() {
     }
 }
 class Clouds {
@@ -339,9 +337,6 @@ class Objecten {
         if (this.plane1y < -50)
             this.plane1y = window.innerHeight + 20;
         this.plane1.style.transform = `translate(${this.plane1x}px, ${this.plane1y}px)`;
-    }
-    gameover() {
-        this.plane1.remove();
     }
 }
 class Powerups {
