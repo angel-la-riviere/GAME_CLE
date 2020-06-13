@@ -32,6 +32,7 @@ class Game {
     }
 
     gameLoop() {
+    
     for (const ball of this.ball) {
         for (const objecten of this.objecten) {
             

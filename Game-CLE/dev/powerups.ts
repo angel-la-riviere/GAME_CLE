@@ -73,7 +73,9 @@ class Powerups {
     }
 
     public powerup(){
-        this.element.remove()
+        this.x = Math.random() * window.innerWidth - 50
+        this.y = 0
+        // this.element.remove()
     }
 
     

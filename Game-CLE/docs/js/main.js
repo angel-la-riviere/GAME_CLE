@@ -400,7 +400,8 @@ class Powerups {
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
     powerup() {
-        this.element.remove();
+        this.x = Math.random() * window.innerWidth - 50;
+        this.y = 0;
     }
 }
 //# sourceMappingURL=main.js.map
