@@ -195,10 +195,15 @@ class Game {
     gameover() {
         let btn = document.getElementById("playagainbutton");
         let btn2 = document.getElementById("scoreopslaanbutton");
-        document.getElementById("playagainbutton").style.display = "block";
-        document.getElementById("scoreopslaanbutton").style.display = "block";
+        let goBack = document.getElementById("back-arrow");
+        let overzicht = document.getElementById("overzicht");
+        document.getElementById("playagainbutton").style.display = "inline-block";
+        document.getElementById("scoreopslaanbutton").style.display = "inline-block";
+        document.getElementById("overzicht").style.display = "inline-block";
         btn.addEventListener("click", (e) => this.playAgain(4));
         btn2.addEventListener("click", (e) => this.scoreSave(4));
+        overzicht.addEventListener("click", (e) => this.fromDataBase(4));
+        goBack.addEventListener("click", (e) => this.goBack(4));
         this.Gameover = document.createElement("test");
         let scores = document.createElement("final_score");
         let game = document.getElementsByTagName("game")[0];
@@ -219,9 +224,11 @@ class Game {
     scoreSave(n) {
         document.getElementById("playagainbutton").style.display = "none";
         document.getElementById("scoreopslaanbutton").style.display = "none";
+        document.getElementById("overzicht").style.display = "none";
         this.Gameover.innerHTML = "Score opslaan";
         document.getElementById("group").style.display = "block";
         document.getElementById("save").style.display = "block";
+        document.getElementById("back-arrow").style.display = "block";
         let btnSave = document.getElementById("save");
         btnSave.addEventListener("click", (e) => this.toDataBase(4));
     }
@@ -242,6 +249,35 @@ class Game {
             }
         });
         location.reload();
+    }
+    fromDataBase(n) {
+        document.getElementById("playagainbutton").style.display = "none";
+        document.getElementById("scoreopslaanbutton").style.display = "none";
+        document.getElementById("overzicht").style.display = "none";
+        document.getElementsByTagName("final_score")[0].innerHTML = "";
+        document.getElementById("back-arrow").style.display = "block";
+        document.getElementById("div2").style.display = "block";
+        this.Gameover.innerHTML = "";
+        $.ajax({
+            type: "POST",
+            url: "highscore.php",
+            dataType: "html",
+            success: function (response) {
+                $("#div2").html(response);
+                console.log("njisdndfbjhdsbjh");
+            }
+        });
+    }
+    goBack(n) {
+        this.Gameover.innerHTML = "Game over!";
+        document.getElementById("playagainbutton").style.display = "inline-block";
+        document.getElementById("scoreopslaanbutton").style.display = "inline-block";
+        document.getElementById("overzicht").style.display = "inline-block";
+        document.getElementById("group").style.display = "none";
+        document.getElementById("save").style.display = "none";
+        document.getElementById("back-arrow").style.display = "none";
+        document.getElementById("div2").style.display = "none";
+        document.getElementsByTagName("final_score")[0].innerHTML = "Score: " + this.score;
     }
 }
 window.addEventListener("load", () => new Game());
