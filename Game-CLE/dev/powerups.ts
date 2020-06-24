@@ -1,6 +1,6 @@
 class Powerups {
 
-
+    // Variabelen
     element : HTMLElement
     x : number = 0
     y : number = 0
@@ -10,26 +10,31 @@ class Powerups {
     downSpeed : number = 0
     upSpeed : number = 0
 
+    // Get powerups Rectangle
     public getRectangle() {
         return this.element.getBoundingClientRect()
     }
 
     constructor(color: string) {
         console.log(color)
+
+        // Event voor bewegen van powerup
         window.addEventListener("keydown", (e:KeyboardEvent) => this.onKeyDown(e))
         window.addEventListener("keyup", (e:KeyboardEvent) => this.onKeyUp(e))
 
+        // Aanmaken powerup
         this.element = document.createElement("powerups")
 
+        // In game plaatsen
         let game = document.getElementsByTagName("game")[0]
-
         game.appendChild(this.element)
 
+        // Positionering powerup
         this.x = Math.random() * window.innerWidth - 50
         this.y = Math.random() * window.innerHeight - 50
-
     }
 
+    // Beweging van powerup
     onKeyDown(event:KeyboardEvent):void {
         console.log(event.keyCode)
 
@@ -44,9 +49,9 @@ class Powerups {
             this.rightSpeed = -0.2
             break
         }
-        
     }
     
+    // Stilstand powerup
     onKeyUp(event:KeyboardEvent):void {
         console.log(event.keyCode)
         switch(event.keyCode){
@@ -64,14 +69,21 @@ class Powerups {
     
     public update() : void { 
         // console.log("Ball is moving")
-        this.y += this.downSpeed
 
+        
+
+        // Beweging object naar onder
+        this.y += this.downSpeed
         this.y -= this.upSpeed
 
+        // Als powerup onder uit beeld gaat kom boven weer in beeld
         if(this.y > window.innerHeight + 15) this.y = - 50
+
+        // Plaats powerup met de movement
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
     }
 
+    // Powerup functie
     public powerup(){
         this.x = Math.random() * window.innerWidth - 50
         this.y = 0

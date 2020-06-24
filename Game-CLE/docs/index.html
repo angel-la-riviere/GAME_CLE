@@ -18,7 +18,19 @@
 
 </head>
 <body>
-    <game>
+    <div id="begin-screen">
+        <img class="img-background" src="./images/beginbackground.png">
+        <div id="buttons-menu">
+          <a class="btn-menu play" id="play">Play</a>
+          <a class="btn-menu highscores-menu" id="highscores-menu">Highscores</a>
+          <a class="btn-menu instellingen" id="instellingen">Instellingen</a>
+          <audio src="./sounds/menu.mp3" loop></audio>
+          <img id="mute" src="images/speaker.png" style="width: 50px;border:3px solid white;padding:10px;display:none;cursor:pointer;">
+          <img id="unmute" src="images/mute.png" style="width: 50px;border:3px solid white;padding:10px;display:none;cursor:pointer;">
+        </div>
+    </div>
+
+    <game id="game_play">
         <!-- Background -->
         <background id="background"></background>
 
@@ -54,7 +66,6 @@
         <!-- Knop voor het opslaan van de score -->
         <button id="save">Opslaan</button>
       </game>
-    
-    <script src="js/main.js"></script>
+    <script src="js/main.js"></script>   
 </body>
 </html>

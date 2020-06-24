@@ -11,7 +11,7 @@ class Ball {
     x : number = 0
     y : number = 0
 
-    // Get object Rectangle
+    // Get player Rectangle
     public getRectangle() {
         return this.element.getBoundingClientRect()
     }

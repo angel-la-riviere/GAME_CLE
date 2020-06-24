@@ -128,6 +128,9 @@ class Game {
         this.powerups = [];
         this.score = 0;
         console.log("Game created!");
+        let sound = document.getElementsByTagName("audio")[0];
+        sound.src = "./sounds/menu.mp3";
+        sound.play();
         for (let i = 0; i < 1; i++) {
             this.ball.push(new Ball("Red"));
         }
@@ -140,22 +143,63 @@ class Game {
         for (let i = 0; i < 10; i++) {
             this.powerups.push(new Powerups("Red"));
         }
-        this.gameLoop();
+        let play = document.getElementById("play");
+        play.addEventListener("click", (e) => this.gameLoop());
+        let instellingen = document.getElementById("instellingen");
+        instellingen.addEventListener("click", (e) => this.instellingen());
+        let mute = document.getElementById("mute");
+        mute.addEventListener("click", (e) => this.mute());
+        let unmute = document.getElementById("unmute");
+        unmute.addEventListener("click", (e) => this.unmute());
+    }
+    instellingen() {
+        document.getElementById("mute").style.display = "block";
+    }
+    mute() {
+        let mySong = document.getElementsByTagName("audio")[0];
+        mySong.volume = 0;
+        document.getElementById("mute").style.display = "none";
+        document.getElementById("unmute").style.display = "block";
+    }
+    unmute() {
+        let mySong = document.getElementsByTagName("audio")[0];
+        mySong.volume = 1;
+        document.getElementById("mute").style.display = "block";
+        document.getElementById("unmute").style.display = "none";
     }
     gameLoop() {
+        document.getElementById("begin-screen").style.display = "none";
+        document.getElementById("game_play").style.display = "block";
         for (const ball of this.ball) {
             for (const objecten of this.objecten) {
                 ball.move();
                 objecten.update();
+                if (this.score > 9) {
+                    objecten.plane1x += 3;
+                }
+                if (this.score > 19) {
+                    objecten.plane1x += 3.2;
+                }
+                if (this.score > 29) {
+                    objecten.plane1x += 3.4;
+                }
+                if (this.score > 39) {
+                    objecten.plane1x += 3.6;
+                }
                 document.getElementById('background').style.backgroundPositionY = ball.y + 130 + 'px';
                 for (const powerup of this.powerups) {
                     if (this.checkCollision(ball.getRectangle(), objecten.getRectangle1())) {
                         console.log("BOTSING MET PADDLE");
+                        let mySong = document.getElementsByTagName("audio")[0];
+                        mySong.volume = 0;
                         this.gameover();
                     }
                     for (const powerup of this.powerups) {
                         powerup.update();
                         if (this.checkCollision(ball.getRectangle(), powerup.getRectangle())) {
+                            var audio = new Audio('sounds/coins.mp3');
+                            audio.play();
+                            audio.volume = 1;
                             console.log("BOTSING MET PADDLE");
                             window.addEventListener("keyup", (e) => this.powerup(e));
                             this.addPoint(1);
@@ -191,6 +235,8 @@ class Game {
         }
     }
     gameover() {
+        var audio = new Audio('sounds/gameover.mp3');
+        audio.play();
         let btn = document.getElementById("playagainbutton");
         let btn2 = document.getElementById("scoreopslaanbutton");
         let goBack = document.getElementById("back-arrow");

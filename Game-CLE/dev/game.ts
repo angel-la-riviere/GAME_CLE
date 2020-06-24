@@ -7,11 +7,19 @@ class Game {
     public powerups : Powerups[] = []
     private score : number = 0
     Gameover : HTMLElement
+    level2 : HTMLElement
+    audioobject : HTMLElement
     
     
 
     constructor() {
+
         console.log("Game created!")
+        
+        let sound = document.getElementsByTagName("audio")[0]
+
+        sound.src = "./sounds/menu.mp3"
+        sound.play()
 
         // Character spawn
         for (let i = 0; i < 1; i++) {
@@ -33,13 +41,47 @@ class Game {
             this.powerups.push(new Powerups("Red"))
         }
 
+        let play = document.getElementById("play");
+        play.addEventListener("click", (e:Event) => this.gameLoop());
+
+        let instellingen = document.getElementById("instellingen");
+        instellingen.addEventListener("click", (e:Event) => this.instellingen());
+
+        let mute = document.getElementById("mute");
+        mute.addEventListener("click", (e:Event) => this.mute());
+
+        let unmute = document.getElementById("unmute");
+        unmute.addEventListener("click", (e:Event) => this.unmute());
         // Gameloop
-        this.gameLoop()
+        // this.gameLoop()
 
     }
 
+    instellingen(){
+        document.getElementById("mute").style.display = "block";
+    }
+
+    mute(){
+        let mySong = document.getElementsByTagName("audio")[0];
+        mySong.volume = 0
+        
+        document.getElementById("mute").style.display = "none";
+
+        document.getElementById("unmute").style.display = "block";
+    }
+
+    unmute(){
+        let mySong = document.getElementsByTagName("audio")[0];
+        mySong.volume = 1
+        
+        document.getElementById("mute").style.display = "block";
+
+        document.getElementById("unmute").style.display = "none";
+    }
+
     gameLoop() {
-    
+        document.getElementById("begin-screen").style.display = "none";
+        document.getElementById("game_play").style.display = "block";
 
         for (const ball of this.ball) {
             for (const objecten of this.objecten) {
@@ -47,12 +89,34 @@ class Game {
                 ball.move()
                 objecten.update()
 
+                // Level 2
+                if(this.score > 9){
+                    objecten.plane1x += 3
+                }
+
+                // Level 3
+                if(this.score > 19){
+                    objecten.plane1x += 3.2
+                }
+
+                // Level 4
+                if(this.score > 29){
+                    objecten.plane1x += 3.4
+                }
+
+                // Level 5
+                if(this.score > 39){
+                    objecten.plane1x += 3.6
+                }
+
                 document.getElementById('background').style.backgroundPositionY =  ball.y + 130 + 'px';
 
                 // Check collission player- and objects
                 for (const powerup of this.powerups) {
                     if (this.checkCollision(ball.getRectangle(), objecten.getRectangle1())) {
                     console.log("BOTSING MET PADDLE")
+                    let mySong = document.getElementsByTagName("audio")[0];
+                    mySong.volume = 0
                     this.gameover()
                 
                 }
@@ -61,9 +125,16 @@ class Game {
                 for (const powerup of this.powerups) {
                     powerup.update()
                     if (this.checkCollision(ball.getRectangle(), powerup.getRectangle())) {
+                        // Sound gameover
+                        var audio = new Audio('sounds/coins.mp3');
+                        audio.play();
+                        audio.volume = 1;
+                        
+
                         console.log("BOTSING MET PADDLE")
                         window.addEventListener("keyup", (e:KeyboardEvent) => this.powerup(e))
                         this.addPoint(1)
+
                         powerup.powerup()
                     }
                 }
@@ -106,6 +177,10 @@ class Game {
     
 
     public gameover(){
+
+        // Sound gameover
+        var audio = new Audio('sounds/gameover.mp3');
+        audio.play();
 
         // Variabelen voor het ophalen van het id van de play again button
         let btn = document.getElementById("playagainbutton");
@@ -155,8 +230,8 @@ class Game {
         // Verwijderen van de player als je game over bent
         for (const ball of this.ball) {
             for (const objecten of this.objecten) {
-            let game = document.getElementsByTagName("game")[0]
-            game.removeChild(ball.element)
+                let game = document.getElementsByTagName("game")[0]
+                game.removeChild(ball.element)
             }
         }
         
